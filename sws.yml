@@ -1,9 +1,0 @@
-current: qa
-production:
-  server: https://sws.aws.fao.org:8181 
-  token: b4e97453-e18d-49ec-b53f-2d7f1e44c5dd # 9 oct 2023, all countries
-  
-qa: 
-  server: https://sws.qa.aws.fao.org:8181
-  token: bfb4f331-ac24-4843-b8ea-9eef17763add #2025-12-23 (Pluggin test)
-  #token: f23586dc-a575-425b-9f72-d07eea5ca6c5 # token for ivan datase test
