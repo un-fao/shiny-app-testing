@@ -6,90 +6,96 @@ library(shiny)
 library(data.table)
 library(plotly)
 library(DT)
-library(faosws)
-library(faoswsUtil)
-library(faoswsFlag)
-library(faoswsModules)
-library(SwsApiClient)
+# library(faosws)
+# library(faoswsUtil)
+# library(faoswsFlag)
+# library(faoswsModules)
+# library(SwsApiClient)
+# 
+# # -- Setting the environment ---------------------------------
+# 
+# if(CheckDebug()){
+# 
+#   library(faoswsModules)
+#   SETT <- ReadSettings("sws.yml")
+# 
+#   # SetClientFiles(SETT[["certdir"]])
+#   GetTestEnvironment(baseUrl = SETT[["server"]], token = SETT[["token"]])
+# 
+# }else{
+# 
+#   GetTestEnvironment(baseUrl = "https://sws.qa.aws.fao.org:8181",
+#                      token = tokenPoU)
+# }
+# 
+# initialiseClient()
+# 
+# # -- Get data ----------------------------------------------
+# 
+# # Domain & dataset
+# domain_ = "baptiste_test_domain"
+# dataset_ = "agriculture_production_baptiste"
+# 
+# # Parameters
+# dataset_geo_areas <- c("250", "380")
+# dataset_elements <- c("5510")
+# dataset_items <- swsContext.datasets[[1]]@dimensions$measuredItemCPC@keys
+# dataset_years <- swsContext.datasets[[1]]@dimensions$timePointYears@keys
+# 
+# # Get the key
+# key_ <- DatasetKey(
+#   domain = domain_,
+#   dataset = dataset_,
+#   dimensions = list(
+#     Country = Dimension("geographicAreaM49", dataset_geo_areas),
+#     Element = Dimension("measuredElement", dataset_elements),
+#     Item = Dimension("measuredItemCPC", dataset_items),
+#     Year = Dimension("timePointYears", dataset_years)
+#   ))
+# 
+# # Get the data
+# dt <- GetData(key_)
+# 
+# # -- data transformation -------------------------------------------------------
+# 
+# # Convert the years in numeric format
+# dt[, timePointYears := as.numeric(timePointYears)]
+# 
+# # Add the names of the countries
+# ## Get the geographicAreasM49 codelist
+# geoAreaCodelist <- getCodelistInfo("geographicAreaM49")$codes
+# geoAreaCodelist <- geoAreaCodelist[, .(id, label_en)]
+# setnames(geoAreaCodelist, c("id", "label_en"), c("geographicAreaM49", "geo_label"))
+# ## Left join with dt
+# dt <- merge(dt, geoAreaCodelist, by = "geographicAreaM49", all.x = TRUE)
+# ## Combine the code and name
+# dt[, geographicAreaM49 := paste0(geo_label," (", geographicAreaM49, ")")]
+# dt[, geo_label := NULL]
+# 
+# # Add the names of the items
+# ## Get the measuredItemCPC codelist
+# measuredItemCPCCodelist <- getCodelistInfo("measuredItemCPC")$codes
+# measuredItemCPCCodelist <- measuredItemCPCCodelist[, .(id, label_en)]
+# setnames(measuredItemCPCCodelist, c("id", "label_en"), c("measuredItemCPC", "item_label"))
+# # Left join with dt
+# dt <- merge(dt, measuredItemCPCCodelist, by = "measuredItemCPC", all.x = TRUE)
+# # Combine the code and name
+# dt[, measuredItemCPC := paste0(item_label," (", measuredItemCPC, ")")]
+# dt[, item_label := NULL]
+# 
+# # Add the name of the elements
+# ## Get the measuredElement codelist
+# measuredElementCodelist <- getCodelistInfo("measuredElement")$codes
+# measuredElementCodelist <- measuredElementCodelist[, .(id, label_en, unit)]
+# setnames(measuredElementCodelist, c("id", "label_en", "unit"), c("measuredElement", "element_label", "unit"))
+# # Left join with dt
+# dt <- merge(dt, measuredElementCodelist, by = "measuredElement", all.x = TRUE)
+# # Combine the code and name
+# dt[, measuredElement := paste0(element_label, " (", unit,") (", measuredElement, ")")]
+# dt[, element_label := NULL]
+# dt[, unit := NULL]
 
-# -- Setting the environment ---------------------------------
-
-if(CheckDebug()){
-  
-  library(faoswsModules)
-  SETT <- ReadSettings("sws.yml")
-  
-  # SetClientFiles(SETT[["certdir"]])
-  GetTestEnvironment(baseUrl = SETT[["server"]], token = SETT[["token"]])
-  
-}
-
-initialiseClient()
-
-# -- Get data ----------------------------------------------
-
-# Domain & dataset
-domain_ = "baptiste_test_domain"
-dataset_ = "agriculture_production_baptiste"
-
-# Parameters
-dataset_geo_areas <- c("250", "380")
-dataset_elements <- c("5510")
-dataset_items <- swsContext.datasets[[1]]@dimensions$measuredItemCPC@keys
-dataset_years <- swsContext.datasets[[1]]@dimensions$timePointYears@keys
-
-# Get the key
-key_ <- DatasetKey(
-  domain = domain_,
-  dataset = dataset_,
-  dimensions = list(
-    Country = Dimension("geographicAreaM49", dataset_geo_areas),
-    Element = Dimension("measuredElement", dataset_elements),
-    Item = Dimension("measuredItemCPC", dataset_items),
-    Year = Dimension("timePointYears", dataset_years)
-  ))
-
-# Get the data
-dt <- GetData(key_)
-
-# -- data transformation -------------------------------------------------------
-
-# Convert the years in numeric format
-dt[, timePointYears := as.numeric(timePointYears)]
-
-# Add the names of the countries
-## Get the geographicAreasM49 codelist
-geoAreaCodelist <- getCodelistInfo("geographicAreaM49")$codes
-geoAreaCodelist <- geoAreaCodelist[, .(id, label_en)]
-setnames(geoAreaCodelist, c("id", "label_en"), c("geographicAreaM49", "geo_label"))
-## Left join with dt
-dt <- merge(dt, geoAreaCodelist, by = "geographicAreaM49", all.x = TRUE)
-## Combine the code and name
-dt[, geographicAreaM49 := paste0(geo_label," (", geographicAreaM49, ")")]
-dt[, geo_label := NULL]
-
-# Add the names of the items
-## Get the measuredItemCPC codelist
-measuredItemCPCCodelist <- getCodelistInfo("measuredItemCPC")$codes
-measuredItemCPCCodelist <- measuredItemCPCCodelist[, .(id, label_en)]
-setnames(measuredItemCPCCodelist, c("id", "label_en"), c("measuredItemCPC", "item_label"))
-# Left join with dt
-dt <- merge(dt, measuredItemCPCCodelist, by = "measuredItemCPC", all.x = TRUE)
-# Combine the code and name
-dt[, measuredItemCPC := paste0(item_label," (", measuredItemCPC, ")")]
-dt[, item_label := NULL]
-
-# Add the name of the elements
-## Get the measuredElement codelist
-measuredElementCodelist <- getCodelistInfo("measuredElement")$codes
-measuredElementCodelist <- measuredElementCodelist[, .(id, label_en, unit)]
-setnames(measuredElementCodelist, c("id", "label_en", "unit"), c("measuredElement", "element_label", "unit"))
-# Left join with dt
-dt <- merge(dt, measuredElementCodelist, by = "measuredElement", all.x = TRUE)
-# Combine the code and name
-dt[, measuredElement := paste0(element_label, " (", unit,") (", measuredElement, ")")]
-dt[, element_label := NULL]
-dt[, unit := NULL]
+dt <- fread("data.csv")
 
 # Get the columns data
 areas   <- sort(unique(dt$geographicAreaM49))
