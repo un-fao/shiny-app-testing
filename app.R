@@ -23,9 +23,7 @@ library(DT)
 #   GetTestEnvironment(baseUrl = SETT[["server"]], token = SETT[["token"]])
 # 
 # }else{
-# 
-#   GetTestEnvironment(baseUrl = "https://sws.qa.aws.fao.org:8181",
-#                      token = tokenPoU)
+#   GetTestEnvironment('https://sws.qa.aws.fao.org:8181', '47f8ef3c-19c0-4305-b4f5-f1171b55e71b')
 # }
 # 
 # initialiseClient()
