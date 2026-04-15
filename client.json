@@ -1,0 +1,12 @@
+{
+    "sws_endpoint": "https://sws.qa.fao.org",
+    "sws_token": "47f8ef3c-19c0-4305-b4f5-f1171b55e71b",
+    "current_task_id": "optionalTaskId",
+    "current_execution_id": "optionalExecId",
+    "authclient": {
+    "clientId": "3rfsfe1qs1bq1k917oli313gcc",
+    "clientSecret": "jkco60rqfe0uu3b02vf6a5b2iprbmg4fgr891ppksdntoprpu7i",
+    "tokenEndpoint": "https://fao-qa.auth.eu-west-1.amazoncognito.com/oauth2/token",
+    "scope": "sws/user"
+  }
+}
